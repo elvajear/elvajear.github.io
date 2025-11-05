@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS3动画效果演示 - 变形、过渡与动画</title>
+    <style>
+        :root {
+            --primary-color: #8e44ad;    /* 深紫色 */
+            --secondary-color: #9b59b6;  /* 紫色 */
+            --accent-color: #e67e22;     /* 橙色 */
+            --light-color: #f9f7fd;      /* 浅紫色背景 */
+            --dark-color: #2c3e50;       /* 深蓝色 */
+            --border-color: #d7dbdd;     /* 浅灰色边框 */
+            --success-color: #27ae60;    /* 绿色 */
+            --warning-color: #f39c12;    /* 黄色 */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f9f7fd 0%, #e8e4f1 100%);
+            color: var(--dark-color);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(142, 68, 173, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            z-index: 1;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        
+        .tab {
+            padding: 18px 35px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .tab:hover::before {
+            left: 100%;
+        }
+        
+        .tab.active {
+            background-color: rgba(142, 68, 173, 0.05);
+            border-bottom-color: var(--accent-color);
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: rgba(142, 68, 173, 0.03);
+        }
+        
+        .content-section {
+            display: none;
+            background-color: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 12px;
+            font-size: 1.8rem;
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin: 25px 0 15px;
+            font-size: 1.4rem;
+        }
+        
+        p {
+            margin-bottom: 18px;
+            font-size: 1.05rem;
+        }
+        
+        .demo-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-top: 35px;
+        }
+        
+        .demo-card {
+            flex: 1;
+            min-width: 200px;
+            background: linear-gradient(145deg, #ffffff, #f5f3fa);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(215, 219, 221, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        }
+        
+        .demo-element {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--accent-color), var(--warning-color));
+            margin: 0 auto 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: all 0.5s ease;
+            box-shadow: 0 4px 8px rgba(230, 126, 34, 0.2);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 4px 6px rgba(142, 68, 173, 0.2);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(142, 68, 173, 0.3);
+        }
+        
+        .code-block {
+            background: linear-gradient(145deg, #2d3748, #1a202c);
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 18px 0;
+            overflow-x: auto;
+            font-size: 14px;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .property-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 18px;
+            margin: 25px 0;
+        }
+        
+        .property-item {
+            background: linear-gradient(145deg, #f9f7fd, #f0ecf9);
+            padding: 18px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+            transition: transform 0.2s ease;
+        }
+        
+        .property-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .property-name {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        /* 变形效果 */
+        .translate-x:hover {
+            transform: translateX(50px);
+        }
+        
+        .translate-y:hover {
+            transform: translateY(50px);
+        }
+        
+        .rotate:hover {
+            transform: rotate(45deg);
+        }
+        
+        .scale:hover {
+            transform: scale(1.5);
+        }
+        
+        .skew:hover {
+            transform: skew(20deg, 10deg);
+        }
+        
+        /* 过渡效果 */
+        .transition-demo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--accent-color), var(--warning-color));
+            margin: 0 auto;
+            border-radius: 12px;
+            transition: all 0.5s ease;
+            box-shadow: 0 4px 8px rgba(230, 126, 34, 0.2);
+        }
+        
+        .transition-demo:hover {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+        }
+        
+        .transition-property {
+            transition-property: width, height, background, border-radius;
+            transition-duration: 1s;
+            transition-timing-function: ease-in-out;
+        }
+        
+        .transition-property:hover {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, var(--secondary-color), #8e44ad);
+            border-radius: 50%;
+        }
+        
+        /* 动画效果 */
+        .animated-box {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--accent-color), var(--warning-color));
+            margin: 0 auto;
+            border-radius: 12px;
+            animation: pulse 2s infinite;
+            box-shadow: 0 4px 8px rgba(230, 126, 34, 0.2);
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                background: linear-gradient(135deg, var(--accent-color), var(--warning-color));
+            }
+            50% {
+                transform: scale(1.2);
+                background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            }
+            100% {
+                transform: scale(1);
+                background: linear-gradient(135deg, var(--accent-color), var(--warning-color));
+            }
+        }
+        
+        .bounce-box {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--success-color), #2ecc71);
+            margin: 0 auto;
+            border-radius: 12px;
+            animation: bounce 2s infinite;
+            box-shadow: 0 4px 8px rgba(39, 174, 96, 0.2);
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-30px);
+            }
+        }
+        
+        .spin-box {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            margin: 0 auto;
+            border-radius: 12px;
+            animation: spin 3s linear infinite;
+            box-shadow: 0 4px 8px rgba(155, 89, 182, 0.2);
+        }
+        
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .walk-box {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #e67e22, #e74c3c);
+            margin: 0 auto;
+            border-radius: 12px;
+            animation: walk 4s ease-in-out infinite;
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.2);
+        }
+        
+        @keyframes walk {
+            0% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(100px) rotate(90deg);
+            }
+            50% {
+                transform: translateX(100px) translateY(100px) rotate(180deg);
+            }
+            75% {
+                transform: translateX(0) translateY(100px) rotate(270deg);
+            }
+            100% {
+                transform: translateX(0) translateY(0) rotate(360deg);
+            }
+        }
+        
+        .animation-controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 18px;
+        }
+        
+        .animation-box {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--accent-color), var(--warning-color));
+            margin: 18px auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(230, 126, 34, 0.2);
+        }
+        
+        .play-state-running {
+            animation-play-state: running;
+        }
+        
+        .play-state-paused {
+            animation-play-state: paused;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .demo-area {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .demo-card {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CSS3动画效果演示</h1>
+            <p class="subtitle">变形、过渡与动画的交互式学习</p>
+        </header>
+        
+        <div class="nav-tabs">
+            <div class="tab active" data-tab="transform">变形(Transform)</div>
+            <div class="tab" data-tab="transition">过渡(Transition)</div>
+            <div class="tab" data-tab="animation">动画(Animation)</div>
+        </div>
+        
+        <!-- 变形部分 -->
+        <section id="transform" class="content-section active">
+            <h2>CSS3 变形 (Transform)</h2>
+            <p>CSS3变形是一些效果的集合，包括位移、旋转、缩放、倾斜效果，它们可以操控元素发生平移、旋转、缩放、倾斜等变化。</p>
+            
+            <div class="property-list">
+                <div class="property-item">
+                    <div class="property-name">translate()</div>
+                    <p>元素从当前位置移动，根据给定的 left（x 坐标） 和 top（y 坐标） 位置参数。</p>
+                </div>
+                <div class="property-item">
+                    <div class="property-name">rotate()</div>
+                    <p>元素顺时针旋转给定的角度。允许负值，元素将逆时针旋转。</p>
+                </div>
+                <div class="property-item">
+                    <div class="property-name">scale()</div>
+                    <p>元素的尺寸会增加或减少，根据给定的宽度（X 轴）和高度（Y 轴）参数。</p>
+                </div>
+                <div class="property-item">
+                    <div class="property-name">skew()</div>
+                    <p>元素翻转给定的角度，根据给定的水平线（X 轴）和垂直线（Y 轴）参数。</p>
+                </div>
+            </div>
+            
+            <h3>变形效果演示</h3>
+            <p>将鼠标悬停在下面的元素上查看不同的变形效果：</p>
+            
+            <div class="demo-area">
+                <div class="demo-card">
+                    <div class="demo-element translate-x">平移X</div>
+                    <p>translateX(50px)</p>
+                </div>
+                <div class="demo-card">
+                    <div class="demo-element translate-y">平移Y</div>
+                    <p>translateY(50px)</p>
+                </div>
+                <div class="demo-card">
+                    <div class="demo-element rotate">旋转</div>
+                    <p>rotate(45deg)</p>
+                </div>
+                <div class="demo-card">
+                    <div class="demo-element scale">缩放</div>
+                    <p>scale(1.5)</p>
+                </div>
+                <div class="demo-card">
+                    <div class="demo-element skew">倾斜</div>
+                    <p>skew(20deg, 10deg)</p>
+                </div>
+            </div>
+            
+            <div class="code-block">
+/* 平移 */
+.translate-x {
+    transform: translateX(50px);
+}
+
+/* 旋转 */
+.rotate {
+    transform: rotate(45deg);
+}
+
+/* 缩放 */
+.scale {
+    transform: scale(1.5);
+}
+
+/* 倾斜 */
+.skew {
+    transform: skew(20deg, 10deg);
+}
+            </div>
+        </section>
+        
+        <!-- 过渡部分 -->
+        <section id="transition" class="content-section">
+            <h2>CSS3 过渡 (Transition)</h2>
+            <p>CSS3过渡允许您在给定的时间内平滑地改变属性值（从一个值到另一个值）。</p>
+            
+            <div class="property-list">
+                <div class="property-item">
+                    <div class="property-name">transition-property</div>
+                    <p>指定应用过渡效果的CSS属性名称。</p>
+                </div>
+                <div class="property-item">
+                    <div class="property-name">transition-duration</div>
+                    <p>指定过渡效果需要多少秒或毫秒完成。</p>
+                </div>
+                <div class="property-item">
+                    <div class="property-name">transition-timing-function</div>
+                    <p>指定过渡效果的速度曲线。</p>
+                </div>
+                <div class="property-item">
+                    <div class="property-name">transition-delay</div>
+                    <p>定义过渡效果何时开始。</p>
+                </div>
+            </div>
+            
+            <h3>过渡效果演示</h3>
+            <p>将鼠标悬停在下面的元素上查看过渡效果：</p>
+            
+            <div class="demo-area">
+                <div class="demo-card">
+                    <div class="transition-demo"></div>
+                    <p>基础过渡效果</p>
+                    <div class="code-block">
+.transition-demo {
+    transition: all 0.5s ease;
+}
+
+.transition-demo:hover {
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(135deg, #8e44ad, #9b59b6);
+    border-radius: 50%;
+}
+                    </div>
+                </div>
+                <div class="demo-card">
+                    <div class="transition-demo transition-property"></div>
+                    <p>指定属性过渡</p>
+                    <div class="code-block">
+.transition-property {
+    transition-property: width, height, 
+        background, border-radius;
+    transition-duration: 1s;
+    transition-timing-function: ease-in-out;
+}
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 动画部分 -->
+        <section id="animation" class="content-section">
+            <h2>CSS3 动画 (Animation)</h2>
+            <p>CSS3动画允许元素从一种样式逐渐变化为另一种样式。通过@keyframes规则，您可以创建动画。</p>
+            
+            <div class="property-list">
+                <div class="property-item">
+                    <div class="property-name">@keyframes</div>
+                    <p>定义动画序列中的关键帧样式。</p>
+                </div>
+                <div class="property-item">
+                    <div class="property-name">animation-name</div>
+                    <p>指定要绑定到选择器的关键帧名称。</p>
+                </div>
+                <div class="property-item">
+                    <div class="property-name">animation-duration</div>
+                    <p>定义动画完成一个周期需要多少秒或毫秒。</p>
+                </div>
+                <div class="property-item">
+                    <div class="property-name">animation-timing-function</div>
+                    <p>规定动画的速度曲线。</p>
+                </div>
+                <div class="property-item">
+                    <div class="property-name">animation-delay</div>
+                    <p>定义动画何时开始。</p>
+                </div>
+                <div class="property-item">
+                    <div class="property-name">animation-iteration-count</div>
+                    <p>定义动画应该播放多少次。</p>
+                </div>
+                <div class="property-item">
+                    <div class="property-name">animation-direction</div>
+                    <p>定义是否应该轮流反向播放动画。</p>
+                </div>
+            </div>
+            
+            <h3>动画效果演示</h3>
+            <p>下面的元素展示了不同类型的CSS3动画：</p>
+            
+            <div class="demo-area">
+                <div class="demo-card">
+                    <div class="animated-box"></div>
+                    <p>脉冲动画</p>
+                    <div class="code-block">
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.animated-box {
+    animation: pulse 2s infinite;
+}
+                    </div>
+                </div>
+                <div class="demo-card">
+                    <div class="bounce-box"></div>
+                    <p>弹跳动画</p>
+                    <div class="code-block">
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-30px); }
+}
+
+.bounce-box {
+    animation: bounce 2s infinite;
+}
+                    </div>
+                </div>
+                <div class="demo-card">
+                    <div class="spin-box"></div>
+                    <p>旋转动画</p>
+                    <div class="code-block">
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.spin-box {
+    animation: spin 3s linear infinite;
+}
+                    </div>
+                </div>
+                <div class="demo-card">
+                    <div class="walk-box"></div>
+                    <p>路径动画</p>
+                    <div class="code-block">
+@keyframes walk {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(100px) rotate(90deg); }
+    50% { transform: translateX(100px) translateY(100px) rotate(180deg); }
+    75% { transform: translateX(0) translateY(100px) rotate(270deg); }
+    100% { transform: translateX(0) translateY(0) rotate(360deg); }
+}
+
+.walk-box {
+    animation: walk 4s ease-in-out infinite;
+}
+                    </div>
+                </div>
+            </div>
+            
+            <h3>动画控制</h3>
+            <p>使用下面的按钮控制动画的播放状态：</p>
+            
+            <div class="demo-card" style="max-width: 300px; margin: 0 auto;">
+                <div id="controlled-animation" class="animation-box walk-box"></div>
+                <div class="animation-controls">
+                    <button id="play-animation" class="btn">播放动画</button>
+                    <button id="pause-animation" class="btn">暂停动画</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 选项卡切换功能
+        const tabs = document.querySelectorAll('.tab');
+        const contentSections = document.querySelectorAll('.content-section');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 移除所有活动状态
+                tabs.forEach(t => t.classList.remove('active'));
+                contentSections.forEach(section => section.classList.remove('active'));
+                
+                // 添加当前活动状态
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // 动画控制功能
+        const controlledAnimation = document.getElementById('controlled-animation');
+        const playButton = document.getElementById('play-animation');
+        const pauseButton = document.getElementById('pause-animation');
+        
+        playButton.addEventListener('click', () => {
+            controlledAnimation.style.animationPlayState = 'running';
+        });
+        
+        pauseButton.addEventListener('click', () => {
+            controlledAnimation.style.animationPlayState = 'paused';
+        });
+    </script>
+</body>
+</html>
